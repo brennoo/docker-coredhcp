@@ -1,0 +1,67 @@
+name: Build and Push Docker Image
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Get upstream commit hash
+        id: get_commit_hash
+        run: |
+          UPSTREAM_COMMIT_HASH=$(go list -m -json github.com/coredhcp/coredhcp | jq -r .Version | cut -c1-7)
+          echo "::set-output name=commit_hash::${UPSTREAM_COMMIT_HASH}"
+
+      - name: Build Docker image
+        id: build
+        run: |
+          IMAGE_TAG=brennoo/coredhcp:${{ steps.get_commit_hash.outputs.commit_hash }}
+          docker build -t $IMAGE_TAG .
+
+  push:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Get upstream commit hash
+        id: get_commit_hash
+        run: |
+          UPSTREAM_COMMIT_HASH=$(go list -m -json github.com/coredhcp/coredhcp | jq -r .Version | cut -c1-7)
+          echo "::set-output name=commit_hash::${UPSTREAM_COMMIT_HASH}"
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Docker image
+        run: |
+          IMAGE_TAG=brennoo/coredhcp:${{ steps.get_commit_hash.outputs.commit_hash }}
+          docker push $IMAGE_TAG
