@@ -1,6 +1,10 @@
 # CoreDHCP Docker Image
 
-This repository provides an automated build and push process for the CoreDHCP Docker image based on the latest commits from the `coredhcp/coredhcp` GitHub repository. The Docker image is automatically tagged with the short commit hash from the upstream repository, ensuring that each image reflects the specific snapshot of the upstream codebase.
+[![Docker Pulls](https://img.shields.io/docker/pulls/brennoo/coredhcp.svg)](https://hub.docker.com/r/brennoo/coredhcp)
+[![Build and Push Docker Image](https://github.com/brennoo/docker-coredhcp/actions/workflows/docker-build.yml/badge.svg)](https://github.com/brennoo/docker-coredhcp/actions/workflows/docker-build.yml)
+
+This repository provides an automated build and push process for the CoreDHCP Docker image based on the latest commits from [coredhcp/coredhcp](https://github.com/coredhcp/coredhcp). The Docker image is automatically tagged with the short commit hash from the upstream repository, ensuring that each image reflects the specific snapshot of the upstream codebase.
+
 
 ## Table of Contents
 
