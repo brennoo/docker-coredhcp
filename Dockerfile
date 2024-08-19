@@ -8,7 +8,7 @@ WORKDIR /app/coredhcp/cmds/coredhcp
 
 RUN go build -o /coredhcp .
 
-FROM gcr.io/distroless/base
+FROM gcr.io/distroless/static-debian12
 
 COPY --from=builder /coredhcp /usr/local/bin/coredhcp
 
