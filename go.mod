@@ -1,6 +1,6 @@
 module main
 
-go 1.20
+go 1.23
 
 require github.com/coredhcp/coredhcp v0.0.0-20240709092356-bd8c8089a5ab
 
