@@ -1,4 +1,4 @@
-FROM golang:1.22-buster AS builder
+FROM golang:1.22-bookworm AS builder
 
 ARG TARGETARCH
 ENV GOARCH=$TARGETARCH
